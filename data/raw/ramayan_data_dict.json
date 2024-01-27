@@ -1,0 +1,210 @@
+{
+	"book": "Ramayan",
+	"version": 0.1,
+	"persons": {
+		"female": [
+			{
+				"name": "Ahalya",
+				"desc": "Wife of sage Gautama, who was turned into a stone and later became free from curse by the touch of Rama"
+			},
+			{
+				"name": "Kaikeyi",
+				"desc": "Dashartha’s youngest queen and mother of Bharata"
+			},
+			{
+				"name": "Kausalya",
+				"desc": "Dashratha’s queen and mother of Rama"
+			},
+			{
+				"name": "Mandavi",
+				"desc": "Bharat’s wife & King Janak’s daughter"
+			},
+			{
+				"name": "Manthara",
+				"desc": "Maid servant of Keikeyi who convinced her for Bharat’s thorn and exile of Rama"
+			},
+			{
+				"name": "Shabari",
+				"desc": "Devotee of Rama who offered him berries"
+			},
+			{
+				"name": "Shrutkirti",
+				"desc": "Shatrughna’s wife and King Janak’s daughter"
+			},
+			{
+				"name": "Sita",
+				"desc": "Daughter of Janaka and wife of Rama"
+			},
+			{
+				"name": "Sumitra",
+				"desc": "Wife of Dashratha; Mother of Laxman & Shatrughna"
+			},
+			{
+				"name": "Sunayana",
+				"desc": "Wife of King Janak; Mother of Sita"
+			},
+			{
+				"name": "Tadaka",
+				"desc": "Demoness or rakshasi killed by Rama; mother of Mareecha"
+			},
+			{
+				"name": "Urmila",
+				"desc": "Wife of Laxman"
+			}
+		],
+		"male": [
+			{
+				"name": "Bharata",
+				"desc": "Brother of Rama and son of Kaikeyi"
+			},
+			{
+				"name": "Dasharatha",
+				"desc": "Father of Rama and King of Kosala"
+			},
+			{
+				"name": "Dashanan",
+				"desc": "Ten headed King of Lanka also known as Ravana"
+			},
+			{
+				"name": "Gautama",
+				"desc": "Rishi who cursed her wife Ahalya and turned her into a stone"
+			},
+			{
+				"name": "Hanuman",
+				"desc": "Devout of Rama and a greatest warrior"
+			},
+			{
+				"name": "Indrajit",
+				"desc": "Son of Ravana who fought with Rama with magical powers"
+			},
+			{
+				"name": "Jambuvan",
+				"desc": "Leader of bears who found Sita with his supernatural powers"
+			},
+			{
+				"name": "Janaka",
+				"desc": "King of Mithila and Father of Sita"
+			},
+			{
+				"name": "Janaka",
+				"desc": "King of Mithila and Father of Sita"
+			},
+			{
+				"name": "Khar",
+				"desc": "Brother of Ravana and Shurpanakha"
+			},
+			{
+				"name": "Kumbhkarna",
+				"desc": "Brother of Ravana and known for sleeping and eating"
+			},
+			{
+				"name": "Kush",
+				"desc": "Son of Rama and Sita"
+			},
+			{
+				"name": "Laxman",
+				"desc": "Queen Sumitra’s son and younger brother of Rama"
+			},
+			{
+				"name": "Lava",
+				"desc": "Son of Rama and Sita"
+			},
+			{
+				"name": "Meghanad",
+				"desc": "Son of Ravana who made Laxman unconscious in the battlefield with his arrow"
+			},
+			{
+				"name": "Nala",
+				"desc": "Son of great builder who helped Rama construct the famous bridge to Lanka"
+			},
+			{
+				"name": "Shatrughan",
+				"desc": "Younger brother of Laxmana and son of Sumitra"
+			},
+			{
+				"name": "Sugriva",
+				"desc": "King of monkey tribe and King of Kiskindha"
+			},
+			{
+				"name": "Sumanta",
+				"desc": "Prime minister of Ayodhya"
+			},
+			
+			{
+				"name": "Tulsidas",
+				"desc": "Sanskrit scholar and poet who created Ramacharitmanas"
+			},
+			{
+				"name": "Bali",
+				"desc": "The mighty ape, cousin of Sugriva and king of Kiskindha"
+			},
+			{
+				"name": "Valmiki",
+				"desc": "The great poet and creator of Ramayana and helped Sita and her two sons"
+			},
+			{
+				"name": "Vasistha",
+				"desc": "Head priest or kul Guru of Ayodhya"
+			},
+			{
+				"name": "Vibhishana",
+				"desc": "Brother of Ravana who leaves Lanka and devotee of Rama"
+			},
+			{
+				"name": "Vishwamitra",
+				"desc": "Sage or rishi, who used Rama to kill troubling demons"
+			},
+			{
+				"name": "Rama",
+				"desc": ["See you!", "Have a nice day", "Bye! Come back again soon."]
+			},
+			{
+				"name": "Ravana",
+				"desc": "Ten headed King of Lanka, who abducted Sita"
+			},
+			{
+				"name": "Shatrughna",
+				"desc": "Rama’s younger brother"
+			},
+			{
+				"name": "Shatananda",
+				"desc": "Head Priest or kul Guru of Mithila"
+			},
+			{
+				"name": "Sushen",
+				"desc": "Lankan physician, who advised Sanjivani herbs from Kailas mountain in order to cure Laxman"
+			}
+		]
+	},
+	"Other": {
+		"places": [
+			{
+				"name": "Ayodhya",
+				"desc": "Birth place of Rama and capital of Kosala"
+			},
+			{
+				"name": "Lanka",
+				"desc": "Kingdom of Ravana,also called as Trikut"
+			},
+			{
+				"name": "Mithila",
+				"desc": "Birth palce of Sita and Kingdom of King Jananka"
+			},
+			{
+				"name": "Kiskindha",
+				"desc": "Kingdom of Sugriva"
+				
+			}
+		],
+		"god": [
+			{
+				"name": "Vishnu",
+				"type": "Part of the Hindu Trinity of Gods know as Lord of Preservation"
+			},
+			{
+				"name": "Shiva",
+				"type": "Part of the Hindu Trinity of Gods know as Lord of Destruction"
+			}
+		]
+	}
+}

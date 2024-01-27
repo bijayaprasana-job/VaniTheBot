@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat Bot User Interface</title>
+	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../static/css/style.css?u={{ last_updated }}">
+    </head>
+
+    <body>
+        <div class="loader"></div>
+        <div class="headerBar">
+                <div class="user-photo"><img src="../static/images/bot-new.GIF"></div>
+                <p class="title">Vani BOT @ Your Service</p>
+        </div>
+        
+        <div class="chatbox">
+
+            <div class="chatlogs">
+            
+                <div class="chat friend" id="chat friend">
+                    <div class="user-photo"><img src="../static/images/bot-new.GIF"></div>
+                    <p class="chat-message">HI , This is Vani ,Your Virtual Assistant...<br/>Help me with your name to begin with..</p>
+                </div>
+
+                <div class="chat friend" id="loadingGif" style="display: none;">
+                    <div class="user-photo"><img src="../static/images/bot-new.GIF"></div>
+                    <div class="gif"><img src="../static/images/loading.gif"></div>
+                </div>
+
+            </div>            
+        </div>
+        <div class="chat-form">
+            <div id="inputDiv">
+                <div id="buttonDiv"></div>
+                <textarea id="msgTxt" class="input" placeholder="Message" rows="1" data-min-rows='1'></textarea>
+            </div>
+            <div id="chat-form-buttons">
+                <input type ="image"id="rec" src="../static/images/microphone.png">
+                <input type="image" src="../static/images/keyboard.png" id="switchInputType"/>
+            </div>
+        </div>
+        
+        
+
+        <script type="text/javascript" src="../static/js/index.js?u={{ last_updated }}"></script>  
+    </body>
+
+</html>

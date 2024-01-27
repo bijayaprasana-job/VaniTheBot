@@ -1,0 +1,38 @@
+{
+	"globalconfig": {
+		"mode": "train",
+		"training": [
+			{
+				"type": "intent",
+				"models": [
+					"logistic",
+					"svm",
+					"dtrf"
+				],
+				"filename": "Dataset_Final.csv",
+				"processed": false,
+				"outputfile": "clean_intent.csv",
+				"pqr": [
+					"traveling",
+					"photography"
+				]
+			},
+			{
+				"type": "sentiment",
+				"models": [
+					"logistic",
+					"svm",
+					"dtrf"
+				],
+				"filename": "sentiment_train_Final.csv",
+				"outputfile": "clean_sentiment.csv",
+				"processed": false,
+				"pqr": [
+					"traveling",
+					"photography"
+				]
+			}
+		],
+		"modelcreated": "false"
+	}
+}

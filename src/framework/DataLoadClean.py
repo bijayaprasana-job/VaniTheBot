@@ -2,6 +2,7 @@ import string
 
 from nltk import WordNetLemmatizer, word_tokenize
 from nltk.corpus import stopwords
+from tqdm import tqdm
 from tqdm.dask import TqdmCallback
 from dask.diagnostics import ProgressBar
 
@@ -39,54 +40,65 @@ class DataLoader(AbstractHandler):
         return df
 
     def handle(self, configs) -> []:
+
         clean_files = []
         for items in configs:
             self.isFileProcessed = items['processed']
             if not self.isFileProcessed:
                 fileName = os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + "\\data\\raw\\" + items[
                     'filename']
-                print("*******************Traning Pipeline started for :",str(items['type']).upper()+ ": Classification *******************************")
-                print("Processing Raw File :", fileName,":")
-                df = self.load_csv(fileName)
-                print("Total Records :%2d" % len(df), 'for:', items['type'], ':')
-                print('Unique_Classes :%2d' % len(list(set(df.iloc[:, 1]))), 'for:', items['type'], ':')
-                super().handle(items, df)
+                print("*******************Traning Pipeline started for :",
+                      str(items['type']).upper() + ": Classification *******************************")
+                print(":Data Loading Started:")
+                print("Processing Raw File :", fileName, ":")
+                original_df = self.load_csv(fileName)
+                print("Total Records :%2d" % len(original_df), 'for:', items['type'], ':')
+                print('Unique_Classes :%2d' % len(list(set(original_df.iloc[:, 1]))), 'for:', items['type'], ':')
+                print("Data Loading End, Next Handler :-> DataCleaner : ")
+                original_df = original_df.dropna(axis=0)
+                x_train, y_train, x_val, y_val = super().handle(items, original_df)
                 clean_files.append(items['type'])
             else:
                 clean_files.append(items['type'])
 
-        return clean_files
+        return x_train, y_train, x_val, y_val
 
 
 class DataCleaner(AbstractHandler):
     isCleaningDone: bool = False
+
     def __int__(self):
         self.nlp = spacy.load("en_core_web_sm")
 
-    def handle(self, item, dataFrame) -> str:
-        print("==> Data Cleaning Started")
+    def handle(self, item, orignial_df) -> str:
         self.__int__()
         if not bool(item['processed'] == 'true'):
-            df = self.clean_text(dataFrame)
-            rawfileName = os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + "\\data\\raw\\" + item[
-                'filename']
+            df = pd.DataFrame(orignial_df)
+            cleaned_df = self.clean_text(df)
+            # rawfileName = os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + "\\data\\raw\\" + item[
+            #     'filename']
 
             outfileName = os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + "\\data\\processed\\" + item[
                 'outputfile']
-            df.to_csv(outfileName)
+            cleaned_df.to_csv(outfileName)
             print("Clean Processed File is created ->", outfileName)
-            super().handle(DataLoader().load_csv(outfileName))
-            del df
-        return "I am good"
+            print("Data Cleaning END , Next Handler :-> DataPreProcess/Tokenization : ")
+            x_train, y_train, x_val, y_val = super().handle(item, cleaned_df)
+        return x_train, y_train, x_val, y_val
 
     def clean_text(self, orgnial_df):
-
-        clean_df['clean_text'] = orgnial_df.iloc[:, 0].apply(self.convert_to_ascii) \
-            .apply(self.remove_punctuation) \
-            .apply(self.removing_unnecessary) \
-            .apply(self.lemmatize_text) \
-            .apply(self.text_standardization)
+        print("The Shape Before cleaning:", orgnial_df.shape[0])
+        import numpy as np
+       # for i in tqdm(range(int(orgnial_df.shape[0]/1000))):
+        clean_df = pd.DataFrame(np.zeros([orgnial_df.shape[0],orgnial_df.shape[1]]),columns=['clean_text', 'class_types'])
+        clean_df['clean_text'] = orgnial_df.iloc[:, 0] \
+                .apply(self.convert_to_ascii) \
+               .apply(self.remove_punctuation) \
+               .apply(self.removing_unnecessary) \
+               .apply(self.lemmatize_text) \
+               .apply(self.text_standardization)
         clean_df['class_types'] = orgnial_df.iloc[:, 1]
+        print("The Shape after cleaning ::", clean_df.shape)
         return clean_df
 
     def lemmatize_text(self, text):
@@ -129,10 +141,10 @@ class DataCleaner(AbstractHandler):
         text = TAG_RE.sub('', text)
         text = re.sub(r"\s+[a-zA-Z]\s+", ' ', text)
         text = re.sub(r'\s+', ' ', text)
-        text = re.sub(r'[+-]?([0-9]*[.])?[0-9]+', ' ', text)
+        #  text = re.sub(r'[+-]?([0-9]*[.])?[0-9]+', ' ', text)
         text = text.replace('?', ' ').replace('!', ' ').replace('\t', ' ')
-        pattern = re.compile(r'\b(' + r'|'.join(stopwords_list) + r')\b\s*')
-        text = pattern.sub('', text)
+        #   pattern = re.compile(r'\b(' + r'|'.join(stopwords_list) + r')\b\s*')
+        # text = pattern.sub('', text)
 
         # print(text)
         return text

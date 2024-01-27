@@ -8,10 +8,15 @@ from src.utils.globals import CONFIG_FILE
 
 
 class CreateModel():
+    config = []
+
+    def __int__(self, config):
+        self.config = config
 
     def __get_factory(self, model_type):
         factory = None
-        if model_type == "intent":
+        model_type = model_type.strip()
+        if str(model_type).strip() == 'intent':
             factory = IntentModelFactory()
         elif model_type == "sentiment":
             factory = SentimentModelFactory()
@@ -24,12 +29,8 @@ class CreateModel():
             print("factory object not passed")
         factory.create_model()
 
-    def get_model_pipeline(self):
-
-        path = os.getcwd()
-        with open(os.path.abspath(os.path.join(path, os.pardir)) + CONFIG_FILE) as user_file:
-            configs = json.load(user_file)
-            print("Started Creating models")
+    def get_model_pipeline(self, configs):
+        print("Started Creating models")
         for items in configs:
             factory_object = self.__get_factory(items['type'])
             for model in items['models']:
@@ -39,10 +40,10 @@ class CreateModel():
 # if __name__ == '__main__':
 #     app_object = CreateModel()
 #     path = os.getcwd()
-#     with open(os.path.abspath(os.path.join(path, os.pardir)) + CONFIG_FILE) as user_file:
+#     with open(os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + CONFIG_FILE) as user_file:
 #         configs = json.load(user_file)
-#     print("Started Creating models")
-#     for items in configs:
-#         factory_object = app_object.get_factory(items['type'])
+#     print("Started Creating models", configs)
+#     for items in configs['globalconfig']['training']:
+#         factory_object = app_object.get_factory(str(items['type']))
 #         for model in items['models']:
 #             factory_object.create_model(model, items['type'])

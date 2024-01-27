@@ -49,13 +49,12 @@ def tranin_mode(*args):
     if not bool(args[0]['globalconfig']['modelcreated'] == 'true'):
         begineHandler = DataLoader()
         begineHandler.set_next(DataCleaner()).set_next(DataPreProcess()).set_next(DataPadTokenizer()).set_next(GenerateTrainTestData())
-        result = begineHandler.handle(args[0]['globalconfig']['training'])
-        # model_obj = CreateModel()
-        # model_obj.get_model_pipeline();
+        x_train, y_train, x_val, y_val = begineHandler.handle(args[0]['globalconfig']['training'])
+        model_obj = CreateModel()
+        model_obj.get_model_pipeline(args[0]['globalconfig']['training']);
         # args[0]['globalconfig']['modelcreated'] = 'true'
         # with open(config_file_path, 'w') as config_file:
         #     json.dump(args[0],config_file)
-        print("Data Cleaning is done for ", (str(result).upper()))
 
     return True
 

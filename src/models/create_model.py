@@ -30,11 +30,13 @@ class CreateModel():
         factory.create_model()
 
     def get_model_pipeline(self, configs):
-        print("Started Creating models")
+        print("Started Creating models" , )
         for items in configs:
-            factory_object = self.__get_factory(items['type'])
-            for model in items['models']:
-                factory_object.create_model(model, items['type'])
+            print("->>>>>>" , items['processed'])
+            if str(items['processed']).lower() == 'true':
+                factory_object = self.__get_factory(items['type'])
+                for model in items['models']:
+                    factory_object.create_model(model, items['train'],items['test'])
 
 
 # if __name__ == '__main__':

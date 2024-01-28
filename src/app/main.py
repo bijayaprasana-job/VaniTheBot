@@ -10,12 +10,12 @@ import json
 from src.models.nlp.IntentClassifier import IntentClassifier
 from src.utils.CommonUtils import CommonUtils
 from src.utils.LoadRawData import LoadRawData
-from src.utils.globals import CONFIG_FILE
+from src.utils import globals as gv
 
 app = Flask(__name__)
 app.static_folder = 'static'
 path = os.getcwd()
-config_file_path = os.path.abspath(os.path.join(path, os.pardir,os.pardir)) + CONFIG_FILE;
+config_file_path = os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + gv.CONFIG_FILE;
 
 
 def get_me_response(msg):
@@ -32,6 +32,7 @@ def get_bot_response():
     dataset = LoadRawData()  # if mode is traning then only
     # Clean Data
     # Tokenize and pad data
+    # Create Traingin/Test data
     # Create specifc model
     # tranidn the model wth the data & save it
     # load the specific model for and predict , intent , stemnt , maina
@@ -44,26 +45,30 @@ def get_bot_response():
     return intentCls.classify_intent(usertext)
 
 
-def tranin_mode(*args):
-    commonUtil = CommonUtils()
-    if not bool(args[0]['globalconfig']['modelcreated'] == 'true'):
+def tranin_mode(configs):
+    # commonUtil = CommonUtils()
+    if not configs['globalconfig']['traintestcreated'] == 'true':
         begineHandler = DataLoader()
-        begineHandler.set_next(DataCleaner()).set_next(DataPreProcess()).set_next(DataPadTokenizer()).set_next(GenerateTrainTestData())
-        x_train, y_train, x_val, y_val = begineHandler.handle(args[0]['globalconfig']['training'])
-        model_obj = CreateModel()
-        model_obj.get_model_pipeline(args[0]['globalconfig']['training']);
-        # args[0]['globalconfig']['modelcreated'] = 'true'
-        # with open(config_file_path, 'w') as config_file:
-        #     json.dump(args[0],config_file)
-
+        begineHandler.set_next(DataCleaner()).set_next(DataPreProcess()).set_next(DataPadTokenizer()).set_next(
+            GenerateTrainTestData())
+        msg = begineHandler.handle(configs['globalconfig']['training'])
+        if msg:
+            configs['globalconfig']['traintestcreated'] = 'true'
+    model_obj = CreateModel()
+    model_obj.get_model_pipeline(configs['globalconfig']['training']);
+    # configs['globalconfig']['modelcreated'] = 'true'
+    with open(config_file_path, 'w') as config_file:
+         json.dump(configs, config_file)
     return True
 
 
 if __name__ == "__main__":
-    with open(config_file_path) as con_file:
+    configs = []
+    path = os.getcwd()
+    with open(os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + gv.CONFIG_FILE) as con_file:
         configs = json.load(con_file)
 
-    # mode = input("Please enter Mode: ")
-    # isTextCleaned = input("Text Cleaning is Done: ")
-    if not tranin_mode(configs):
+    if not configs['globalconfig']['modelcreated'] == 'true':
+        tranin_mode(configs)
+    else:
         app.run(host="localhost", port=8080)

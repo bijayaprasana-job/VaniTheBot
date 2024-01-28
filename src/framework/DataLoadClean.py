@@ -1,24 +1,13 @@
+import os
+import re
 import string
-
+import numpy as np
+import pandas as pd
+import spacy
 from nltk import WordNetLemmatizer, word_tokenize
 from nltk.corpus import stopwords
-from tqdm import tqdm
-from tqdm.dask import TqdmCallback
-from dask.diagnostics import ProgressBar
-
 from src.framework.AbstractBaseHandler import AbstractHandler
-from typing import Any
-from pathlib import Path
-import pandas as pd
-import os
-import spacy
-import re
-import json
-import time
-from progressbar import progressbar
-
 from src.utils.CommonUtils import CommonUtils
-from src.utils.globals import RAW_FILE, CLEAN_FILE, CONFIG_FILE
 
 path = os.getcwd()
 clean_df = pd.DataFrame()
@@ -56,12 +45,12 @@ class DataLoader(AbstractHandler):
                 print('Unique_Classes :%2d' % len(list(set(original_df.iloc[:, 1]))), 'for:', items['type'], ':')
                 print("Data Loading End, Next Handler :-> DataCleaner : ")
                 original_df = original_df.dropna(axis=0)
-                x_train, y_train, x_val, y_val = super().handle(items, original_df)
+                msg = super().handle(items, original_df)
                 clean_files.append(items['type'])
             else:
                 clean_files.append(items['type'])
 
-        return x_train, y_train, x_val, y_val
+        return msg
 
 
 class DataCleaner(AbstractHandler):
@@ -83,13 +72,11 @@ class DataCleaner(AbstractHandler):
             cleaned_df.to_csv(outfileName)
             print("Clean Processed File is created ->", outfileName)
             print("Data Cleaning END , Next Handler :-> DataPreProcess/Tokenization : ")
-            x_train, y_train, x_val, y_val = super().handle(item, cleaned_df)
-        return x_train, y_train, x_val, y_val
+            msg = super().handle(item, cleaned_df)
+        return msg
 
     def clean_text(self, orgnial_df):
         print("The Shape Before cleaning:", orgnial_df.shape[0])
-        import numpy as np
-       # for i in tqdm(range(int(orgnial_df.shape[0]/1000))):
         clean_df = pd.DataFrame(np.zeros([orgnial_df.shape[0],orgnial_df.shape[1]]),columns=['clean_text', 'class_types'])
         clean_df['clean_text'] = orgnial_df.iloc[:, 0] \
                 .apply(self.convert_to_ascii) \

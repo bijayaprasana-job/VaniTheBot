@@ -30,11 +30,11 @@ class GenerateTrainTestData(AbstractHandler):
         x_train_df = pd.DataFrame(x_train)
         x_train_df.to_csv(outfileName + item['train'][0] ,index=False)
         y_train_df = pd.DataFrame(y_train)
-        y_train_df = y_train_df.drop(y_train_df.columns[-1],axis=1)
+        #y_train_df = y_train_df.drop(y_train_df.columns[-1],axis=1)
         y_train_df.to_csv(outfileName + item['train'][1],index=False)
         x_test_df = pd.DataFrame(x_val)
         x_test_df.to_csv(outfileName + item['test'][0],index=False)
         y_test_df = pd.DataFrame(y_val)
-        y_test_df = y_test_df.drop(y_test_df.columns[-1],axis=1)
+       # y_test_df = y_test_df.drop(y_test_df.columns[-1],axis=1)
         y_test_df.to_csv(outfileName + item['test'][1],index=False)
         return True

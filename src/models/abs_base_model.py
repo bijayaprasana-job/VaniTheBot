@@ -51,12 +51,13 @@ class AbstractModel(ABC):
 
 
 class LogisticModel(AbstractModel):
-    twits = ['i liked it very much']  # Need to text to arraya
+    twits = ['Who killed Ravana']  # Need to text to arraya
     def get_model(self, *args):
         print("The arfs are --" , args)
         super().load_train_test_data(args[1], args[2])
-        model = sklearn.linear_model.LogisticRegression(penalty="l2", C=0.1)
+        model = sklearn.linear_model.LogisticRegression(max_iter=10000)
         model.fit(self.train_x, np.ravel(self.train_y))
+
         filename = str(args[0])+'.pkl'
         path = os.getcwd()
         savpath = os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + "\\models\\"
@@ -67,6 +68,9 @@ class LogisticModel(AbstractModel):
         sequences = tokenizer.texts_to_sequences(self.twits)
         data = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
         pred = model.predict(data)
+       # print("Model score is " , model.score(self.test_y,pred)* 100)
+
+        print("THe PRedicted class is " , pred)
         if int(pred) == "1":
             print("Happy")
         else:

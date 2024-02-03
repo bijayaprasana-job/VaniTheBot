@@ -19,7 +19,10 @@ class DataPreProcess(AbstractHandler):
         word_index = tokenizer.word_index
         print('Found %s unique tokens.' % len(word_index))
         label_encoder = preprocessing.LabelEncoder()
-        class_types = clean_df.iloc[:, 1].to_numpy()
+
+        class_types = label_encoder.fit_transform(clean_df.iloc[:, 1])
+        integer_mapping = {l: i for i, l in enumerate(label_encoder.classes_)}
+        print("THe Integer maapping" , integer_mapping)
         print("==> Data Tokenzitation is Done with Length:", len(sequences))
         path = os.getcwd()
         savpath = os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + "\\models\\"
@@ -32,12 +35,12 @@ class DataPadTokenizer(AbstractHandler):
     def handle(self, item,sequences, class_types) -> str:
         print("==> Data Padding ia Started:")
         data = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
-        encoder = LabelEncoder()
-        encoder.fit(class_types)
-        encoded_classes = encoder.transform(class_types)
-        labels = utils.to_categorical(encoded_classes)
+        # encoder = LabelEncoder()
+        # encoder.fit(class_types)
+        # encoded_classes = encoder.transform(class_types)
+        # labels = utils.to_categorical(encoded_classes)
         print('Shape of X ::', data.shape)
-        print('Shape of Y ::', labels.shape)
+        print('Shape of Y ::', class_types.shape)
         print("==> Data Padding ia Done:")
-        msg = super().handle(item,data, labels)
+        msg = super().handle(item,data, class_types)
         return msg

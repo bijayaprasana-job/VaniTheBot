@@ -15,14 +15,14 @@ class SentimentModelFactory(AbstractBaseModelFactory):
     def __int__(self, model_type):
         self.model_type = model_type
 
-    def create_model(self, model_type , train, test):
+    def create_model(self,model_for ,model_type , train, test):
         self.__int__(model_type)
         if self.model_type == 'logistic':
-            LogisticModel().get_model(train, test)
+            LogisticModel().get_model(model_for,train, test)
         elif self.model_type == 'svm':
-            SVMModel().get_model(train, test)
+            SVMModel().get_model(model_for,train, test)
         elif self.model_type == 'dtrf':
-            DTRFModel().get_model(train, test)
+            DTRFModel().get_model(model_for,train, test)
         else:
             print("Model Not Found")
         pass

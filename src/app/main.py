@@ -16,6 +16,7 @@ app = Flask(__name__)
 app.static_folder = 'static'
 path = os.getcwd()
 config_file_path = os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + gv.CONFIG_FILE;
+intentCls = IntentClassifier('test')
 
 
 def get_me_response(msg):
@@ -39,27 +40,36 @@ def get_bot_response():
     # if PRD MODE then take user UserInput as a Object [ stmt , intent , sentiment , main ]
     # send UserObject to model to get Repsone based on intent,sentment and mainchar
     # Create Response Object to send back to actul response
-    raw_intent_df = dataset.load_csv('intent')
-    intentCls = IntentClassifier()
+    #raw_intent_df = dataset.load_csv('intent')
+    print("FileName",intentCls.get_filename());
     usertext = request.args.get('msg')
     return intentCls.classify_intent(usertext)
 
 
-def tranin_mode(configs):
-    # commonUtil = CommonUtils()
-    if not configs['globalconfig']['traintestcreated'] == 'true':
-        begineHandler = DataLoader()
-        begineHandler.set_next(DataCleaner()).set_next(DataPreProcess()).set_next(DataPadTokenizer()).set_next(
-            GenerateTrainTestData())
-        msg = begineHandler.handle(configs['globalconfig']['training'])
-        if msg:
-            configs['globalconfig']['traintestcreated'] = 'true'
-    model_obj = CreateModel()
-    model_obj.get_model_pipeline(configs['globalconfig']['training']);
-    # configs['globalconfig']['modelcreated'] = 'true'
+def traning_mode(configs):
+    commonUtil = CommonUtils()
+    temp_item = []
+    itemsary = configs['globalconfig']['training']
+    print(type(configs['globalconfig']['training']))
+    for index, items in enumerate(configs['globalconfig']['training']):
+        if not items['processed']:
+            print(index, items)
+            begineHandler = DataLoader()
+            begineHandler.set_next(DataCleaner()).set_next(DataPreProcess()).set_next(DataPadTokenizer()).set_next(GenerateTrainTestData())
+            msg = begineHandler.handle(items)
+            #items['processed'] = True
+            print("------------------------Creating Modeleng for ----------------------" ,items['type'] , msg)
+            itemsary[index] = items
+            model_obj = CreateModel()
+            print("items -->" , items)
+            model_obj.get_model_pipeline(items);
+            #items['modelcreated'] = True
+            temp_item = items
+
+    configs['globalconfig']['training'] = itemsary
     with open(config_file_path, 'w') as config_file:
-         json.dump(configs, config_file)
-    return True
+        json.dump(configs, config_file)
+    return temp_item
 
 
 if __name__ == "__main__":
@@ -68,7 +78,8 @@ if __name__ == "__main__":
     with open(os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + gv.CONFIG_FILE) as con_file:
         configs = json.load(con_file)
 
-    if not configs['globalconfig']['modelcreated'] == 'true':
-        tranin_mode(configs)
-    else:
+    if configs['globalconfig']['mode'] == 'train':
+        myitems = traning_mode(configs)
+        print("MYits" , myitems)
+        intentCls.set_filename(myitems['type'])
         app.run(host="localhost", port=8080)

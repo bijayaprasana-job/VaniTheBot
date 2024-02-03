@@ -1,11 +1,14 @@
 from abc import ABC, abstractmethod
 import pandas as pd
 import os
-
+import pickle
 from keras.src.preprocessing.text import Tokenizer
+from keras.src.utils import pad_sequences
 from sklearn.metrics import classification_report
-
+import numpy as np
 import sklearn
+
+from src.utils.globals import MAX_SEQUENCE_LENGTH
 
 
 class AbstractBaseModelFactory(ABC):
@@ -22,6 +25,7 @@ class AbstractModel(ABC):
         self.test_x = None
         self.test_y = None
         self.path = None
+        self.tokenizer = Tokenizer()
 
     def load_train_test_data(self, train, test):
         self.path = os.getcwd()
@@ -47,23 +51,35 @@ class AbstractModel(ABC):
 
 
 class LogisticModel(AbstractModel):
-    import numpy as np
-    twits = np.array([0, 64, 9, 5, 131, 60, 3, 13, 487, 34, 130]) # Need to text to arraya
-    twits = twits.reshape(1, -1)
-
+    twits = ['i liked it very much']  # Need to text to arraya
     def get_model(self, *args):
-        super().load_train_test_data(args[0], args[1])
+        print("The arfs are --" , args)
+        super().load_train_test_data(args[1], args[2])
         model = sklearn.linear_model.LogisticRegression(penalty="l2", C=0.1)
-        model.fit(self.train_x, self.train_y)
+        model.fit(self.train_x, np.ravel(self.train_y))
+        filename = str(args[0])+'.pkl'
+        path = os.getcwd()
+        savpath = os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + "\\models\\"
+        with open(savpath+filename, 'wb') as file:
+            pickle.dump(model, file)
         print(classification_report(self.test_y, model.predict(self.test_x)))
-        pred = model.predict(self.twits)
-        print(pred)
+        tokenizer = self.get_token_from_input(args[0])
+        sequences = tokenizer.texts_to_sequences(self.twits)
+        data = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
+        pred = model.predict(data)
+        if int(pred) == "1":
+            print("Happy")
+        else:
+            print("UnHappy")
         pass
-    def get_token_from_input(self):
-        reviews = ['very good quality though']
-        tokenizer = Tokenizer(num_words=10)
-        tokenizer.fit_on_texts(clean_df[CLEANED_TEXT].astype(str))
-        sequences = tokenizer.texts_to_sequences(clean_df[CLEANED_TEXT].astype(str))
+
+    def get_token_from_input(self,fileName):
+        with open('../../models/'+fileName+'_tokenizer.pkl', 'rb') as handle:
+            self.tokenizer = pickle.load(handle)
+        word_index = self.tokenizer.word_index
+        print('Found %s unique tokens.' % len(word_index))
+        return self.tokenizer
+
 
 class SVMModel(AbstractModel):
     def get_model(self, *args):

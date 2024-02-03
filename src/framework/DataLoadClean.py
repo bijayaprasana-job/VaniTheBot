@@ -28,28 +28,23 @@ class DataLoader(AbstractHandler):
         df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
         return df
 
-    def handle(self, configs) -> []:
-
+    def handle(self, items) -> []:
+        msg = ''
         clean_files = []
-        for items in configs:
-            self.isFileProcessed = items['processed']
-            if not self.isFileProcessed:
-                fileName = os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + "\\data\\raw\\" + items[
-                    'filename']
-                print("*******************Traning Pipeline started for :",
-                      str(items['type']).upper() + ": Classification *******************************")
-                print(":Data Loading Started:")
-                print("Processing Raw File :", fileName, ":")
-                original_df = self.load_csv(fileName)
-                print("Total Records :%2d" % len(original_df), 'for:', items['type'], ':')
-                print('Unique_Classes :%2d' % len(list(set(original_df.iloc[:, 1]))), 'for:', items['type'], ':')
-                print("Data Loading End, Next Handler :-> DataCleaner : ")
-                original_df = original_df.dropna(axis=0)
-                msg = super().handle(items, original_df)
-                clean_files.append(items['type'])
-            else:
-                clean_files.append(items['type'])
-
+        print("THe items are " , items)
+        fileName = os.path.abspath(os.path.join(path, os.pardir, os.pardir)) + "\\data\\raw\\" + items[
+            'filename']
+        print("*******************Traning Pipeline started for :",
+              str(items['type']).upper() + ": Classification *******************************")
+        print(":Data Loading Started:")
+        print("Processing Raw File :", fileName, ":")
+        original_df = self.load_csv(fileName)
+        print("Total Records :%2d" % len(original_df), 'for:', items['type'], ':')
+        print('Unique_Classes :%2d' % len(list(set(original_df.iloc[:, 1]))), 'for:', items['type'], ':')
+        print("Data Loading End, Next Handler :-> DataCleaner : ")
+        original_df = original_df.dropna(axis=0)
+        msg = super().handle(items, original_df)
+        clean_files.append(items['type'])
         return msg
 
 
